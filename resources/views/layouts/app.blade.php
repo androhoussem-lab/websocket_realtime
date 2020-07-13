@@ -73,6 +73,7 @@
         </nav>
 
         <main class="py-4">
+            @csrf
             @yield('content')
         </main>
     </div>
