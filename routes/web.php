@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\WebSocketDemoEvent;
+use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,6 +20,16 @@ Route::get('/', function () {
     broadcast(new WebSocketDemoEvent('some data'));
     return view('welcome');
 });
+
+Route::get('/chat', 'ChatController@index' );
+Route::get('/messages','ChatController@fetchMessages');
+Route::post('/messages','ChatController@sendMessage');
+
+
+
+
+
+
 
 Auth::routes();
 
