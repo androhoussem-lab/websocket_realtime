@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Broadcast;
 */
 
 Route::get('/', function () {
-    broadcast(new WebSocketDemoEvent('some data'));
+    //broadcast(new WebSocketDemoEvent('some data'));
     return view('welcome');
 });
 

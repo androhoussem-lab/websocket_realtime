@@ -5,10 +5,11 @@
             <div class="card card-default">
                 <div class="card-header" style="background-color:purple;color:white;">Messages</div>
                 <div class="card-body p-0">
-                     <ul class="list-instyled" style="height : 300px;overflow-y:scroll;">
+                     <ul class="list-instyled" style="height : 300px;overflow-y:scroll;" v-chat-scroll>
                         <li class="p-2" v-for="(message , index) in messages" :key="index" >
                             <b style="color:purple;">{{message.user.name}}</b> :
                             {{message.message}}
+                            <span style="display:block;">{{message.formatTimeForHuman}}</span>
                             </li>
                     </ul>
                 </div>
