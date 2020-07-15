@@ -1952,7 +1952,8 @@ __webpack_require__.r(__webpack_exports__);
       id: this.user.id,
       messages: [],
       newMessage: '',
-      users: []
+      users: [],
+      activeUser: false
     };
   },
   created: function created() {
@@ -1969,6 +1970,11 @@ __webpack_require__.r(__webpack_exports__);
       });
     }).listen('SendMessageEvent', function (event) {
       _this.messages.push(event.message);
+    }).listenForWhisper('typing', function (user) {
+      _this.activeUser = user;
+      setTimeout(function () {
+        _this.activeUser = false;
+      }, 3000);
     });
   },
   methods: {
@@ -1989,6 +1995,9 @@ __webpack_require__.r(__webpack_exports__);
         message: this.newMessage
       });
       this.newMessage = '';
+    },
+    sendTypingEvent: function sendTypingEvent() {
+      Echo.join('Chat-Channel').whisper('typing', this.user);
     }
   }
 });
@@ -43762,15 +43771,18 @@ var render = function() {
         },
         domProps: { value: _vm.newMessage },
         on: {
-          keyup: function($event) {
-            if (
-              !$event.type.indexOf("key") &&
-              _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-            ) {
-              return null
+          keyup: [
+            _vm.sendTypingEvent,
+            function($event) {
+              if (
+                !$event.type.indexOf("key") &&
+                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+              ) {
+                return null
+              }
+              return _vm.sendMessage($event)
             }
-            return _vm.sendMessage($event)
-          },
+          ],
           input: function($event) {
             if ($event.target.composing) {
               return
@@ -43785,7 +43797,11 @@ var render = function() {
         domProps: { value: _vm.id }
       }),
       _vm._v(" "),
-      _c("span", { staticClass: "text-muted" }, [_vm._v("User is typing...")])
+      _vm.activeUser
+        ? _c("span", { staticClass: "text-muted" }, [
+            _vm._v(_vm._s(_vm.activeUser.name) + " is typing")
+          ])
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "col-4" }, [
