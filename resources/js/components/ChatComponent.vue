@@ -3,11 +3,11 @@
 
         <div class="col-8">
             <div class="card card-default">
-                <div class="card-header" style="background-color:green;">Messages</div>
+                <div class="card-header" style="background-color:purple;color:white;">Messages</div>
                 <div class="card-body p-0">
                      <ul class="list-instyled" style="height : 300px;overflow-y:scroll;">
-                        <li class="p-2" v-for="(message , index) in messages" :key="index">
-                            <b>{{message.user.name}}</b> :
+                        <li class="p-2" v-for="(message , index) in messages" :key="index" >
+                            <b style="color:purple;">{{message.user.name}}</b> :
                             {{message.message}}
                             </li>
                     </ul>
@@ -20,9 +20,13 @@
         </div>
         <div class="col-4">
             <div class="card card-default" >
-                <div class="card-header" style="background-color:green;">User Active</div>
+                <div class="card-header" style="background-color:purple;color:white;">User Active</div>
                 <div class="card-body p-0">
-
+                    <ul class="list-instyled" style="height : 300px;overflow-y:scroll;">
+                        <li class="p-2" v-for="(user,index) in users" :key="index">
+                            {{user.name}}
+                        </li>
+                    </ul>
                 </div>
             </div>
 
@@ -37,11 +41,26 @@
             return {
                 id : this.user.id,
                 messages : [] ,
-                newMessage : ''
+                newMessage : '' ,
+                users : [],
             };
         },
         created : function (){
             this.fetchMessages();
+            Echo.join('Chat-Channel')
+                .here(user => {
+                    this.users = user;
+                })
+                .joining(user => {
+                    this.users.push(user);
+                })
+                .leaving(user => {
+                    this.users = this.users.filter(u => u.id =! user.id);
+                })
+                .listen('SendMessageEvent' , (event) => {
+                    this.messages.push(event.message);
+
+                });
         },
         methods : {
             fetchMessages(){

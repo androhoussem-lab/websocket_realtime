@@ -42,7 +42,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     encrypted: true,
     disableStats: true,
 });
+/* just a test
 window.Echo.channel('DemoChannel').listen('WebSocketDemoEvent' , (e)=>{
     console.log(e);
 });
+*/
 
