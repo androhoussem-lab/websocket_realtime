@@ -45,6 +45,7 @@
                 newMessage : '' ,
                 users : [],
                 activeUser : false,
+                typingTimer : false,
             };
         },
         created : function (){
@@ -64,9 +65,13 @@
 
                 })
                 .listenForWhisper('typing',user => {
+                    if(this.typingTimer){
+                    clearTimeout(this.typingTimer)
+                }
                     this.activeUser = user;
-                     setTimeout(() => {
+                   this.typingTimer = setTimeout(() => {
                     this.activeUser = false;
+
                 }, 3000);
                 });
 

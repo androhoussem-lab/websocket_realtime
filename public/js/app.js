@@ -1953,7 +1953,8 @@ __webpack_require__.r(__webpack_exports__);
       messages: [],
       newMessage: '',
       users: [],
-      activeUser: false
+      activeUser: false,
+      typingTimer: false
     };
   },
   created: function created() {
@@ -1971,8 +1972,12 @@ __webpack_require__.r(__webpack_exports__);
     }).listen('SendMessageEvent', function (event) {
       _this.messages.push(event.message);
     }).listenForWhisper('typing', function (user) {
+      if (_this.typingTimer) {
+        clearTimeout(_this.typingTimer);
+      }
+
       _this.activeUser = user;
-      setTimeout(function () {
+      _this.typingTimer = setTimeout(function () {
         _this.activeUser = false;
       }, 3000);
     });
